@@ -1,6 +1,11 @@
-# bode's time model.
-> 安装:  
->`pip install bdtime`
+# bdtime简介
+
+> bode's time model.
+
+## 安装  
+- `pip install bdtime`
+
+## 案例
 
 ```
 from bd_time import Time()
@@ -24,3 +29,4 @@ def f():
 f()
 
 ```
+
