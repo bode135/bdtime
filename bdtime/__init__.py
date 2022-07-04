@@ -6,5 +6,5 @@ from .utils import *
 
 
 def version():
-    ret = '0.0.8'
+    ret = '0.0.9'
     return ret
