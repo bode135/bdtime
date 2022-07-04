@@ -7,6 +7,28 @@ LOCAL_TIMEZONE = dt.timezone(
 )
 
 
+class CommonDateTimeFormats:
+    """
+    常用日期时间格式
+    """
+    s_dt = '%Y/%m/%d %H:%M:%S'
+    ms_dt = "%Y/%m/%d %H:%M:%S.%f"
+
+    s_int = "%Y%m%d%H%M%S"
+    ms_int = "%Y%m%d%H%M%S%f"
+
+    _date_and_time_ls = s_dt.split(' ')
+    only_date = _date_and_time_ls[0]
+    only_time = _date_and_time_ls[-1]
+
+
+common_date_time_formats = CommonDateTimeFormats()
+
+
+DEFAULT_TIME_FORMAT = common_date_time_formats.s_dt
+DEFAULT_DECIMAL_PLACES = 2
+
+
 def get_current_beijing_time_dt():
     utc_now = dt.datetime.utcnow().replace(tzinfo=dt.timezone.utc)
 
@@ -25,9 +47,9 @@ def get_current_beijing_time_str(fmt: str = None, decimal_places: (int, None) = 
     current_beijing_time_dt = get_current_beijing_time_dt()
 
     if fmt is None:
-        fmt = '%Y/%m/%d %H:%M:%S.%f'
+        fmt = DEFAULT_TIME_FORMAT
         if decimal_places is None:
-            decimal_places = 2
+            decimal_places = DEFAULT_DECIMAL_PLACES
 
     if decimal_places:
         value_range = [0, 6]
@@ -43,24 +65,6 @@ def get_current_beijing_time_str(fmt: str = None, decimal_places: (int, None) = 
         current_beijing_time_str = current_beijing_time_dt.strftime(fmt)
 
     return current_beijing_time_str
-
-
-class CommonDateTimeFormats:
-    """
-    常用日期时间格式
-    """
-    s_dt = '%Y/%m/%d %H:%M:%S'
-    ms_dt = "%Y/%m/%d %H:%M:%S.%f"
-
-    s_int = "%Y%m%d%H%M%S"
-    ms_int = "%Y%m%d%H%M%S%f"
-
-    _date_and_time_ls = s_dt.split(' ')
-    only_date = _date_and_time_ls[0]
-    only_time = _date_and_time_ls[-1]
-
-
-common_date_time_formats = CommonDateTimeFormats()
 
 
 if __name__ == '__main__':

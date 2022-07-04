@@ -282,11 +282,19 @@ class Time():
         self.time = time
         self.sleep = sleep
         self.now()
-        self.common_date_time_formats = datetime_utils.common_date_time_formats
         self.break_flag = 0
 
+        self.common_date_time_formats = datetime_utils.common_date_time_formats
+        self.datetime_utils = datetime_utils
+
     def set_timezone(self, my_timezone):
-        datetime_utils.LOCAL_TIMEZONE = my_timezone
+        self.datetime_utils.LOCAL_TIMEZONE = my_timezone
+
+    def set_default_time_format(self, default_time_format):
+        self.datetime_utils.DEFAULT_TIME_FORMAT = default_time_format
+
+    def set_default_decimal_places(self, default_decimal_places):
+        self.datetime_utils.DEFAULT_DECIMAL_PLACES = default_decimal_places
 
     def now(self, round_=3):  # return now time
         self.t1 = time()
