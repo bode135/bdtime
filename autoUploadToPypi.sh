@@ -5,8 +5,8 @@
 source authinfo.sh
 
 echo "-------- begging auto submit ---------"
-echo "--- your username: $username"
-echo "--- passwd: $passwd"
+echo "--- your username: ${username:0:2}**${username:0-1}"
+echo "--- passwd: ********"
 sleep 1.5
 
 # git更新, 删除旧文件, 编译新文件, expect自动上传pypi
