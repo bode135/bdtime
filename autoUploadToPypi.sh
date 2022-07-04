@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-: 杀死指定端口, linux和mac版本
+: 利用expect, 自动打包上传到pypi
 
 # 加载用户名和密码
 source authinfo.sh
