@@ -140,9 +140,6 @@ dmypy.json
 /tempdir
 
 
-# 脚本
-commit_and_push.bat
-
 shells/*
 !shells/global_config.sh
 !shells/pykillport.py
@@ -154,6 +151,10 @@ shells/*
 !shells/pull.sh
 !shells/migrate_db.sh
 !shells/setTimeZone.sh
+!shells/commit_and_push.sh
+
+# 脚本
+!commit_and_push.bat
 
 #/user/templates/
 
