@@ -11,7 +11,7 @@ from time import sleep
 from functools import wraps
 import sys
 from warnings import warn
-from . import utils
+from . import datetime_utils
 
 if sys.platform == 'win32':
     try:
@@ -282,11 +282,11 @@ class Time():
         self.time = time
         self.sleep = sleep
         self.now()
-        self.common_date_time_formats = utils.common_date_time_formats
+        self.common_date_time_formats = datetime_utils.common_date_time_formats
         self.break_flag = 0
 
     def set_timezone(self, my_timezone):
-        utils.LOCAL_TIMEZONE = my_timezone
+        datetime_utils.LOCAL_TIMEZONE = my_timezone
 
     def now(self, round_=3):  # return now time
         self.t1 = time()
@@ -300,10 +300,10 @@ class Time():
         return now_r
 
     def get_current_beijing_time_dt(self):
-        return utils.get_current_beijing_time_dt()
+        return datetime_utils.get_current_beijing_time_dt()
 
     def get_current_beijing_time_str(self, fmt: str = None, decimal_places: (int, None) = None):
-        return utils.get_current_beijing_time_str(fmt, decimal_places)
+        return datetime_utils.get_current_beijing_time_str(fmt, decimal_places)
 
     def tqdm_sleep(self, desc='正在启动程序...', T=3, times=100, fresh=0):
         from tqdm import tqdm

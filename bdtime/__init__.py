@@ -2,6 +2,7 @@ name = "bdtime"
 
 
 from .my_time import *
+from .utils import *
 
 
 def version():
