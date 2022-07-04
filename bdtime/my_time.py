@@ -1,15 +1,17 @@
-'''
+"""
 本模块主要功能：
-1、按键状态判断
-2、虚拟按键码表
+1. 按键状态判断
+2. 虚拟按键码表
+3. 日期时间格式化输出
 
 该模块支持64位python
-'''
-
+"""
 from time import time
 from time import sleep
 from functools import wraps
 import sys
+from warnings import warn
+from . import utils
 
 if sys.platform == 'win32':
     try:
@@ -31,7 +33,7 @@ else:
 
 class VK:
     Time = 0.1
-    Constant = 8000 # 内部标记
+    Constant = 8000  # 内部标记
 
     ms_l = mouse_left = vk_lbutton = VK_LBUTTON = 1
     ms_r = mouse_right = vk_rbutton = VK_RBUTTON = 2
@@ -67,7 +69,7 @@ class VK:
     insert = 45
     delete = 46
     help = 47
-    num_0 = 48      # 大键盘数字编码
+    num_0 = 48  # 大键盘数字编码
     num_1 = 49
     num_2 = 50
     num_3 = 51
@@ -103,7 +105,7 @@ class VK:
     x = 88
     y = 89
     z = 90
-    numpad_0 = 96       # 小键盘数字编码
+    numpad_0 = 96  # 小键盘数字编码
     numpad_1 = 97
     numpad_2 = 98
     numpad_3 = 99
@@ -178,17 +180,17 @@ class VK:
     clear_key = 254
 
     symbol = {'+': 0xBB,
-               ',': 0xBC,
-               '-': 0xBD,
-               '.': 0xBE,
-               '/': 0xBF,
-               '`': 0xC0,
-               ';': 0xBA,
-               '[': 0xDB,
-               '\\': 0xDC,
-               ']': 0xDD,
-               "'": 0xDE,
-               '\`': 0xC0}
+              ',': 0xBC,
+              '-': 0xBD,
+              '.': 0xBE,
+              '/': 0xBF,
+              '`': 0xC0,
+              ';': 0xBA,
+              '[': 0xDB,
+              '\\': 0xDC,
+              ']': 0xDD,
+              "'": 0xDE,
+              '\`': 0xC0}
     ##########
     shift = 16
     ctrl = 17
@@ -208,7 +210,7 @@ class VK:
     n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = 96, 97, 98, 99, 100, 101, 102, 103, 104, 105
     left, up, right, down = 37, 38, 39, 40
 
-    def conv_ord(self, ch):     # 转换类型, return: vitual_key_code
+    def conv_ord(self, ch):  # 转换类型, return: vitual_key_code
         # ch = 'q'
         if isinstance(ch, int):
             return ch
@@ -232,11 +234,13 @@ def run_f_with_sleep(sleep_time=1):
             return testf(*args, **kwargs)
 
         return decorated
+
     return decorator_name
 
 
 def run_f_with_during(during_time=5, sleep_time=1, break_key='alt + s'):
     tt = Time()
+
     def decorator_name(testf):
         @wraps(testf)
         def decorated(*args, **kwargs):
@@ -247,7 +251,7 @@ def run_f_with_during(during_time=5, sleep_time=1, break_key='alt + s'):
                     tt.break_flag = 1
                     print(f'用户手动中断! --------------- 总运行时间: [{tt.now(2)}/{during_time}] 秒')
 
-                keyboard.add_hotkey(break_key, lambda:  setBreakFlag(tt))
+                keyboard.add_hotkey(break_key, lambda: setBreakFlag(tt))
 
                 run_times = 0
                 while tt.during(during_time):
@@ -258,12 +262,16 @@ def run_f_with_during(during_time=5, sleep_time=1, break_key='alt + s'):
                     tt.sleep(sleep_time)
 
                     ret = testf(*args, **kwargs)
-                    print(f'第 [{run_times}] 次运行的返回值为: [{ret}]. ------------- 总运行时间 :[{tt.now(2)}/{during_time}] 秒, ')        # 0改为int类型!
+                    print(
+                        f'第 [{run_times}] 次运行的返回值为: [{ret}]. ------------- 总运行时间 :[{tt.now(2)}/{during_time}] 秒, ')  # 0改为int类型!
 
                 keyboard.remove_hotkey(break_key)
                 return ret
+
             return circulate_f(*args, **kwargs)
+
         return decorated
+
     return decorator_name
 
 
@@ -274,10 +282,13 @@ class Time():
         self.time = time
         self.sleep = sleep
         self.now()
-
+        self.common_date_time_formats = utils.common_date_time_formats
         self.break_flag = 0
 
-    def now(self,round_ = 3):   # return now time
+    def set_timezone(self, my_timezone):
+        utils.LOCAL_TIMEZONE = my_timezone
+
+    def now(self, round_=3):  # return now time
         self.t1 = time()
         now = self.t1 - self.t0
 
@@ -288,18 +299,23 @@ class Time():
 
         return now_r
 
+    def get_current_beijing_time_dt(self):
+        return utils.get_current_beijing_time_dt()
 
-    def tqdm_sleep(self, desc = '正在启动程序...', T = 3, times = 100, fresh = 0):
+    def get_current_beijing_time_str(self, fmt: str = None, decimal_places: (int, None) = None):
+        return utils.get_current_beijing_time_str(fmt, decimal_places)
+
+    def tqdm_sleep(self, desc='正在启动程序...', T=3, times=100, fresh=0):
         from tqdm import tqdm
         # from tqdm import tqdm_gui
-        if(fresh == 0):     # 刷新频率
+        if (fresh == 0):  # 刷新频率
             fresh = T / times
         else:
-            times = int(T/fresh)
+            times = int(T / fresh)
 
         t0 = self.time()
         try:
-            with tqdm(range(times),desc = desc, unit = ' it', ascii=True) as bar:       # , ascii=True
+            with tqdm(range(times), desc=desc, unit=' it', ascii=True) as bar:  # , ascii=True
 
                 # print('\r -------- 启动 ------- ', tt.now(1))
                 for i in bar:
@@ -319,81 +335,45 @@ class Time():
             return 0
 
     # return: tt.now() <= T
-    def during(self,T):
+    def during(self, T):
         if (self.now() <= T):
             return 1
         else:
             return 0
 
-    # # 检查是否按下了暂停按键p
-    # def stop(self, ch='p'):
-    #     if(self.get_key_state(vk.conv_ord(ch))):
-    #         return 1
-    #     else:
-    #         self.break_flag = 0
-    #         return 0
-
-    # # 检查是否按下了暂停按键 Alt+s，推荐使用
-    # def stop_alt(self, ch='s', raise_error = 1):
-    #     break0 = False
-    #     if self.get_key_state( vk.conv_ord(ch) ) and self.get_key_state(vk.alt):
-    #         break0 = True
-    #         if(raise_error):
-    #             print('--- tt.stop_alt --- tt.now: ', self.now(1))
-    #     return break0
-
-    def stop_alt(self, ch='s', raise_error = 1):
+    def stop_alt(self, ch='s', raise_error=1):
         hotkey = 'alt + ' + ch
 
         break0 = False
         if self.is_pressed(hotkey):
             break0 = True
-            if(raise_error):
+            if (raise_error):
                 print('--- tt.stop_alt --- tt.now: ', self.now(1))
         return break0
 
-
-
-    # # 弹窗暂停, 只能中断一次，第二次后的暂停不能继续运行
-    # def stop_0(self,ch='p'):
-    #     break0 = 0
-    #     if self.get_key_state(vk.conv_ord(ch)) and self.get_key_state(vk.alt):
-    #             print('------- Stop! --------')
-    #             self.MessageBox('pause.', 'Stop!', 0)
-    #             break0 = True
-    #     return break0
-    def stop_0(self,ch='p', alt=True):
+    def stop_0(self, ch='p', alt=True):
         return self.stop_win(ch)
 
-    def stop_win(self,ch='p', alt=True):
+    def stop_win(self, ch='p', alt=True):
         # 只能windows用!
-        if(alt):
+        if (alt):
             hotkey = 'alt + ' + ch
         else:
             hotkey = ch
 
         break0 = 0
         if self.is_pressed(hotkey):
-                print('------- Stop! --------')
-                self.MessageBox('pause.', 'Stop!', 0)
-                break0 = True
+            print('------- Stop! --------')
+            self.MessageBox('pause.', 'Stop!', 0)
+            break0 = True
         return break0
 
-
-    def MessageBox(self, text = 'Text', title = 'Warning!', model = 0, hwnd = 0):
+    def MessageBox(self, text='Text', title='Warning!', model=0, hwnd=0):
         return MessageBox(hwnd, text, title, model)
 
-    def get_key_state(self,ch='p'):
-        ch = vk.conv_ord(ch)
-        nVirtKey = GetKeyState(ch)
-
-        if (nVirtKey == -127 or nVirtKey == -128):
-            return 1
-        else:
-            return 0
-    # def get_key_state(self, ch):
-    #     hotkey = ch
-    #     return keyboard.is_pressed(hotkey)
+    def get_key_state(self, ch='p'):
+        warn("该方法已被is_pressed替代!")
+        return self.is_pressed(ch)
 
     def is_pressed(self, hotkey):
         return keyboard.is_pressed(hotkey)
@@ -418,30 +398,11 @@ class Time():
 
 tt = Time()
 
-
 if __name__ == '__main__':
-    # test = Time()
-    @tt.run_f_with_sleep(2)
-    def f():
-        ret = 'haha'
-        return ret
-    print(f())
+    # 默认保留2位小数
+    ret = tt.get_current_beijing_time_str()
+    print(ret)
 
-
-    # keyboard.restore_state(keyboard.key_to_scan_codes('q'))
-    #
-    @tt.run_f_with_during(10, 0.1)
-    def f():
-        return keyboard.is_pressed('a') #-> True
-    f()
-    #
-
-    tt.__init__()
-    while tt.during(5):
-        tt.sleep(0.1)
-        if(tt.stop_alt('a')):
-            break
-
-        print('hahahaha', tt.now())
-
-    pass
+    # 这个适合做临时文件的文件名后缀
+    ret = tt.get_current_beijing_time_str(tt.common_date_time_formats.ms_int)
+    print(ret)

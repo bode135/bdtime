@@ -1,35 +1,70 @@
-# 装饰器
-import keyboard
-from functools import wraps
+import datetime as dt
 
 
-def run_f_with_during(during_time=3, sleep_time=1, break_key='alt + s'):
-    tt = Time()
-    def decorator_name(testf):
-        @wraps(testf)
-        def decorated(*args, **kwargs):
-            def circulate_f(*args, **kwargs):
-                ret = None
+LOCAL_TIMEZONE = dt.timezone(
+    dt.timedelta(hours=8),
+    name='Asia/Shanghai',
+)
 
-                def setBreakFlag(tt):
-                    tt.break_flag = 1
-                    print(f'用户手动中断! --------------- 总运行时间: [{tt.now(2)}/{during_time}] 秒')
 
-                keyboard.add_hotkey(break_key, lambda:  setBreakFlag(tt))
+def get_current_beijing_time_dt():
+    utc_now = dt.datetime.utcnow().replace(tzinfo=dt.timezone.utc)
 
-                run_times = 0
-                while tt.during(during_time):
-                    run_times += 1
-                    if tt.break_flag:
-                        break
+    # 北京时间
+    current_beijing_time_dt = utc_now.astimezone(LOCAL_TIMEZONE)
+    return current_beijing_time_dt
 
-                    tt.sleep(sleep_time)
 
-                    ret = testf(*args, **kwargs)
-                    print(f'第 [{run_times}] 次运行的返回值为: [{ret}]. ------------- 总运行时间 :[{tt.now(2)}/{during_time}] 秒, ')        # 0改为int类型!
+def get_current_beijing_time_str(fmt: str = None, decimal_places: (int, None) = None):
+    """
+    得到当前的北京时间字符串
+    :param fmt: 时间格式
+    :param decimal_places: 保留几位小数
+    :return: 当前的北京时间字符串
+    """
+    current_beijing_time_dt = get_current_beijing_time_dt()
 
-                keyboard.remove_hotkey(break_key)
-                return ret
-            return circulate_f(*args, **kwargs)
-        return decorated
-    return decorator_name
+    if fmt is None:
+        fmt = '%Y/%m/%d %H:%M:%S.%f'
+        if decimal_places is None:
+            decimal_places = 2
+
+    if decimal_places:
+        value_range = [0, 6]
+        assert value_range[0] <= decimal_places <= value_range[1], f"decimal_places必须在{value_range}之间!"
+
+        # 若没有以%f结尾, 则自动添加上毫秒格式
+        if not fmt.endswith("%f"):
+            fmt += ".%f"
+
+        _current_beijing_time_str = current_beijing_time_dt.strftime(fmt)
+        current_beijing_time_str = _current_beijing_time_str[:-(value_range[1] - decimal_places)] if decimal_places != value_range[1] else _current_beijing_time_str
+    else:
+        current_beijing_time_str = current_beijing_time_dt.strftime(fmt)
+
+    return current_beijing_time_str
+
+
+class CommonDateTimeFormats:
+    """
+    常用日期时间格式
+    """
+    s_dt = '%Y/%m/%d %H:%M:%S'
+    ms_dt = "%Y/%m/%d %H:%M:%S.%f"
+
+    s_int = "%Y%m%d%H%M%S"
+    ms_int = "%Y%m%d%H%M%S%f"
+
+    _date_and_time_ls = s_dt.split(' ')
+    only_date = _date_and_time_ls[0]
+    only_time = _date_and_time_ls[-1]
+
+
+common_date_time_formats = CommonDateTimeFormats()
+
+
+if __name__ == '__main__':
+    # ret = get_current_beijing_time_str()
+    ret = get_current_beijing_time_str(common_date_time_formats.ms_int, 0)
+    print(ret)
+    1
