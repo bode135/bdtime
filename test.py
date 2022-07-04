@@ -9,7 +9,7 @@ if __name__ == '__main__':
     print(ret)
 
     # 这个适合做临时文件的文件名后缀
-    ret = tt.get_current_beijing_time_str(tt.common_date_time_formats.ms_int)
-    print(ret)
+    # ret = tt.get_current_beijing_time_str(tt.common_date_time_formats.ms_int)
+    # print(ret)
 
 
