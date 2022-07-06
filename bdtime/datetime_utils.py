@@ -30,6 +30,9 @@ DEFAULT_DECIMAL_PLACES = 2
 
 
 def get_current_beijing_time_dt():
+    """
+    当前的北京时间(返回datetime格式)
+    """
     utc_now = dt.datetime.utcnow().replace(tzinfo=dt.timezone.utc)
 
     # 北京时间
@@ -40,7 +43,7 @@ def get_current_beijing_time_dt():
 def get_current_beijing_time_str(fmt: str = None, decimal_places: (int, None) = None):
     """
     得到当前的北京时间字符串
-    :param fmt: 时间格式
+    :param fmt: 时间格式, 如"%Y/%m/%d %H:%M:%S.%f"
     :param decimal_places: 保留几位小数
     :return: 当前的北京时间字符串
     """

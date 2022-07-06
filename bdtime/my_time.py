@@ -308,9 +308,19 @@ class Time():
         return now_r
 
     def get_current_beijing_time_dt(self):
+        """
+        当前的北京时间(返回datetime格式)
+        """
         return datetime_utils.get_current_beijing_time_dt()
 
     def get_current_beijing_time_str(self, fmt: str = None, decimal_places: (int, None) = None):
+        """
+       得到当前的北京时间字符串
+
+       :param fmt: 时间格式, 如"%Y/%m/%d %H:%M:%S.%f"
+       :param decimal_places: 保留几位小数
+       :return: 当前的北京时间字符串
+       """
         return datetime_utils.get_current_beijing_time_str(fmt, decimal_places)
 
     def tqdm_sleep(self, desc='正在启动程序...', T=3, times=100, fresh=0):
