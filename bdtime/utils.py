@@ -39,7 +39,7 @@ class PackageVesionUtils:
         check = f'pip install {package}=='
         p = subprocess.Popen(check, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, error = p.communicate()
-        assert error.startswith(b'  Could not find a version'), f"命令[{check}]运行结果有误!"
+        assert b'from versions:' in error, f"命令[{check}]运行结果有误!"
         e_str = error.decode('utf-8')
         reg = re.compile(r':(.*?)\)')
         match = reg.search(e_str)
