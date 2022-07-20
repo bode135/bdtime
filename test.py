@@ -17,10 +17,17 @@ if __name__ == '__main__':
     ret = tt.get_current_beijing_time_str(tt.common_date_time_formats.s_int)
     print(f"时间编号: {ret}")
 
-    from bdtime import get_logger, get_all_loggers
-    print(get_logger(name='haha'))
-    print(get_logger(name='haha'))
-    get_all_loggers()
+    # --- package 的版本控制
+    from bdtime import show_all_loggers, version, package_version_utils
+
+    package_name = 'bdtime'
+    # current_version = get_current_version(package_name)
+    current_version = version()
+    last_version = package_version_utils.get_latest_version(package_name)
+    # print(package_version_utils.compare_version(current_version, last_version))
+    _, _, _, msg = package_version_utils.check_version_by_package_name('bdtime')
+    print(f"check_version_by_package_name msg: {msg}")
+    # show_all_loggers()
 
 
 

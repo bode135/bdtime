@@ -8,6 +8,9 @@ log_config_dc = {
 }
 
 
+log_level_types = list(logging._nameToLevel.keys())
+
+
 def get_logger(name="logger", level="DEBUG"):
     _logger = logging.getLogger(name)
     if _logger:
@@ -26,8 +29,10 @@ def show_all_loggers():
         logger = logging.getLogger(name)
         print('name: [%s], logger: [%s]'%(name, logger))
 
+
 if __name__ == '__main__':
     # log = logging.getLogger("dqn")
     # logging.basicConfig(**log_config_dc)
     # log.setLevel(logging.INFO)
-    logger = get_logger('info', 'test_logger')
+    # logger = get_logger('info', 'test_logger')
+    show_all_loggers()
