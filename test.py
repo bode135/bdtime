@@ -17,4 +17,11 @@ if __name__ == '__main__':
     ret = tt.get_current_beijing_time_str(tt.common_date_time_formats.s_int)
     print(f"时间编号: {ret}")
 
+    from bdtime import get_logger, get_all_loggers
+    print(get_logger(name='haha'))
+    print(get_logger(name='haha'))
+    get_all_loggers()
+
+
+
 

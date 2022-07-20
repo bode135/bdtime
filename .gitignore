@@ -163,3 +163,7 @@ shells/*
 # 敏感信息
 authinfo.sh
 
+# 上传工具
+expect_conf.yaml
+my_scp.exe
+

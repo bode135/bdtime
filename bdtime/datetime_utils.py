@@ -11,8 +11,8 @@ class CommonDateTimeFormats:
     """
     常用日期时间格式
     """
-    s_dt = '%Y/%m/%d %H:%M:%S'
-    ms_dt = "%Y/%m/%d %H:%M:%S.%f"
+    s_dt = '%Y-%m-%d %H:%M:%S'
+    ms_dt = "%Y-%m-%d %H:%M:%S.%f"
 
     s_int = "%Y%m%d%H%M%S"
     ms_int = "%Y%m%d%H%M%S%f"
@@ -43,7 +43,7 @@ def get_current_beijing_time_dt():
 def get_current_beijing_time_str(fmt: str = None, decimal_places: (int, None) = None):
     """
     得到当前的北京时间字符串
-    :param fmt: 时间格式, 如"%Y/%m/%d %H:%M:%S.%f"
+    :param fmt: 时间格式, 如"%Y-%m-%d %H:%M:%S.%f"
     :param decimal_places: 保留几位小数
     :return: 当前的北京时间字符串
     """
@@ -74,4 +74,4 @@ if __name__ == '__main__':
     # ret = get_current_beijing_time_str()
     ret = get_current_beijing_time_str(common_date_time_formats.ms_int, 0)
     print(ret)
-    1
+

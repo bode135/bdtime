@@ -317,7 +317,7 @@ class Time():
         """
        得到当前的北京时间字符串
 
-       :param fmt: 时间格式, 如"%Y/%m/%d %H:%M:%S.%f"
+       :param fmt: 时间格式, 如"%Y-%m-%d %H:%M:%S.%f"
        :param decimal_places: 保留几位小数
        :return: 当前的北京时间字符串
        """
